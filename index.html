@@ -2,15 +2,65 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>GasFácil</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-    <h1>Hello World!</h1>
+    <div class="container">
+      <h4>Bem vindo ao GásFacil</h4>
+
+      <p>Para configurar seu dispositivo siga esses passos!</p>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="card">
+            <div class="card-body">
+              <p>1º passo: selecione o porta serial.</p>
+    
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <select class="form-control form-control-sm" id="selectPort">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                  </div>
+    
+                  <div class="form-group">
+                    <button type="submit" id="checkPort" class="btn btn-outline-success btn-sm">Verificar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card">
+            <div class="card-body">
+              <div class="form-group">
+                <label for="code">Código</label>
+                <input type="text" class="form-control form-control-sm" disabled id="code" placeholder="Digite o código">
+                <small id="codeHelp" class="form-text text-muted">Gere o código a partir do site</small>
+              </div>
+
+              <div class="form-group">
+                  <button type="submit" class="btn btn-outline-success btn-sm">Salvar código</button>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
+    <!-- We are using Node.js <script>document.write(process.versions.node)</script>,
     Chromium <script>document.write(process.versions.chrome)</script>,
     Electron <script>document.write(process.versions.electron)</script>,
-    and Serialport <script>document.write(require('serialport/package').version)</script>.
+    and Serialport <script>document.write(require('serialport/package').version)</script>. -->
 
     <div id="error"></div>
     <div id="ports"></div>
@@ -20,4 +70,6 @@
     // You can also require other files to run in this process
     require('./renderer.js')
   </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="js/bootstrap.js"></script>
 </html>

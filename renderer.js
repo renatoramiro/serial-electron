@@ -7,6 +7,7 @@ const createTable = require('data-table')
 
 serialport.list((err, ports) => {
   console.log('ports', ports);
+  
   if (err) {
     document.getElementById('error').textContent = err.message
     return
@@ -18,11 +19,32 @@ serialport.list((err, ports) => {
     document.getElementById('error').textContent = 'No ports discovered'
   }
 
-  const headers = Object.keys(ports[0])
-  const table = createTable(headers)
-  tableHTML = ''
-  table.on('data', data => tableHTML += data)
-  table.on('end', () => document.getElementById('ports').innerHTML = tableHTML)
-  ports.forEach(port => table.write(port))
-  table.end();
-})
+  var select = document.getElementById('selectPort');
+
+  for (const index in ports) {
+    var option = document.createElement('option');
+    option.setAttribute('value', ports[index].comName);
+    option.appendChild(document.createTextNode(ports[index].comName));
+    select.appendChild(option);
+  }
+
+
+});
+
+function checkPort(port) {
+  var port = new SerialPort(port, { autoOpen: false });
+ 
+  port.open(function (err) {
+    if (err) {
+      return console.log('Error opening port: ', err.message);
+    }
+  
+    // Because there's no callback to write, write errors will be emitted on the port:
+    port.write('main screen turn on');
+
+    port.on('readable', function () {
+      console.log('Data:', port.read());
+    });
+  });
+
+}
