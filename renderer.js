@@ -3,10 +3,10 @@
 // All of the Node.js APIs are available in this process.
 
 const serialport = require('serialport');
-let portSerial;
+let gasSensorDevice;
 
 serialport.list((err, ports) => {
-  console.log('ports', ports);
+  console.log('[Gas Sensor Device] Ports', ports);
   
   if (err) {
     document.getElementById('error').textContent = err.message
@@ -29,17 +29,17 @@ serialport.list((err, ports) => {
   }
 });
 
-if (portSerial) {
-  portSerial.on('open', function () {
-    console.log("Opened");
-    portSerial.write('ping');
+if (gasSensorDevice) {
+  gasSensorDevice.on('open', function () {
+    console.log("[Gas Sensor Device] Device Opened");
+    gasSensorDevice.write('ping');
   });
 
-  portSerial.on('error', function (err) {
-    console.log("Error: " + err.message);
+  gasSensorDevice.on('error', function (err) {
+    console.log("[Gas Sensor Device] Error: " + err.message);
   });
 
-  portSerial.on('data', function (data) {
+  gasSensorDevice.on('data', function (data) {
     if (data.toString() == "Ok pong!") {
       document.getElementById('success').style.visibility = 'visible';
       document.getElementById('success').textContent = "Conexão realizada com sucesso!";
@@ -47,7 +47,7 @@ if (portSerial) {
       document.getElementById('code').disabled = false;
       document.getElementById('saveData').disabled = false;
   
-      console.log('Data Check:', data.toString());
+      console.log('[Gas Sensor Device] Data Check:', data.toString());
     }
   
     if (data.toString() == "Ok saved!") {
@@ -57,8 +57,10 @@ if (portSerial) {
       document.getElementById('code').disabled = false;
       document.getElementById('saveData').disabled = false;
   
-      console.log('Data Saved:', data.toString());
+      console.log('[Gas Sensor Device] Data Saved:', data.toString());
     }
+
+    console.log("[Gas Sensor Device] DATA: " + data.toString());
   });
 }
 
@@ -85,7 +87,8 @@ document.getElementById("saveData").addEventListener('click', function() {
 });
 
 function checkPort(port) {
-  portSerial = new serialport(port, { baudRate: 9600 }, function (err) {
+  var options = { baudRate: 9600, parser: serialport.parsers.readline("\r\n") };
+  gasSensorDevice = new serialport(port, options, function (err) {
     document.getElementById('error').style.visibility = 'visible';
     document.getElementById('error').textContent = err.message + " (" + new Date() + ")";
     return;
@@ -93,6 +96,5 @@ function checkPort(port) {
 }
 
 function saveData(port, code) {
-  console.log(portSerial);
-  portSerial.write('code:' + code);
+  gasSensorDevice.write('code:' + code);
 }
