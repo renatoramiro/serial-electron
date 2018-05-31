@@ -2,8 +2,8 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const serialport = require('serialport')
-const createTable = require('data-table')
+const serialport = require('serialport');
+let portSerial;
 
 serialport.list((err, ports) => {
   console.log('ports', ports);
@@ -27,9 +27,40 @@ serialport.list((err, ports) => {
     option.appendChild(document.createTextNode(ports[index].comName));
     select.appendChild(option);
   }
-
-
 });
+
+if (portSerial) {
+  portSerial.on('open', function () {
+    console.log("Opened");
+    portSerial.write('ping');
+  });
+
+  portSerial.on('error', function (err) {
+    console.log("Error: " + err.message);
+  });
+
+  portSerial.on('data', function (data) {
+    if (data.toString() == "Ok pong!") {
+      document.getElementById('success').style.visibility = 'visible';
+      document.getElementById('success').textContent = "Conexão realizada com sucesso!";
+  
+      document.getElementById('code').disabled = false;
+      document.getElementById('saveData').disabled = false;
+  
+      console.log('Data Check:', data.toString());
+    }
+  
+    if (data.toString() == "Ok saved!") {
+      document.getElementById('success').style.visibility = 'visible';
+      document.getElementById('success').textContent = "Código salvo com sucesso";
+  
+      document.getElementById('code').disabled = false;
+      document.getElementById('saveData').disabled = false;
+  
+      console.log('Data Saved:', data.toString());
+    }
+  });
+}
 
 document.getElementById('selectPort').addEventListener('change', function () {
   document.getElementById('code').disabled = true;
@@ -49,66 +80,22 @@ document.getElementById("saveData").addEventListener('click', function() {
 
   var select = document.getElementById('selectPort');
   var input = document.getElementById('code');
-  console.log(select.value, code.value);
   
   saveData(select.value, input.value);
 });
 
 function checkPort(port) {
-  var port = new serialport(port, { autoOpen: false });
- 
-  port.open(function (err) {
-    if (err) {
-      document.getElementById('error').style.visibility = 'visible';
-      document.getElementById('error').textContent = err.message + " (" + new Date() + ")";
-      return;
-    }
-  
-    // Because there's no callback to write, write errors will be emitted on the port:
-    port.write('ping');
+  portSerial = new serialport(port, { baudRate: 9600 }, function (err) {
+    document.getElementById('error').style.visibility = 'visible';
+    document.getElementById('error').textContent = err.message + " (" + new Date() + ")";
 
-    port.on('readable', function () {
-      if (port.read() == "Ok pong!") {
-        document.getElementById('success').style.visibility = 'visible';
-        document.getElementById('success').textContent = "Conexão realizada com sucesso!";
-
-        document.getElementById('code').disabled = false;
-        document.getElementById('saveData').disabled = false;
-      }
-      console.log('Data Check:', port.read());
-    });
+    document.getElementById('code').disabled = false;
+    document.getElementById('saveData').disabled = false;
+    return;
   });
 }
 
 function saveData(port, code) {
-  var port = new serialport(port, { autoOpen: false });
- 
-  port.open(function (err) {
-    if (err) {
-      document.getElementById('error').style.visibility = 'visible';
-      document.getElementById('error').textContent = err.message + " (" + new Date() + ")";
-
-      document.getElementById('code').value = "";
-
-      document.getElementById('code').disabled = true;
-      document.getElementById('saveData').disabled = true;
-
-      return;
-    }
-  
-    // Because there's no callback to write, write errors will be emitted on the port:
-    port.write('code:' + code);
-
-    port.on('readable', function () {
-      if (port.read() == "Ok saved!") {
-        document.getElementById('success').style.visibility = 'visible';
-        document.getElementById('success').textContent = "Código salvo com sucesso";
-
-        document.getElementById('code').disabled = false;
-        document.getElementById('saveData').disabled = false;
-      }
-      console.log('Data Saved:', port.read());
-    });
-  });
-
+  console.log(portSerial);
+  portSerial.write('code:' + code);
 }
