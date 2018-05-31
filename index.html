@@ -7,26 +7,21 @@
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-    <div class="container">
-      <h4>Bem vindo ao GásFacil</h4>
+    <div class="container" style="margin-top: 30px;">
+      <h4 class="text-center">Bem vindo ao GásFacil</h4>
 
-      <p>Para configurar seu dispositivo siga esses passos!</p>
+      <p class="text-center">Para configurar seu dispositivo siga os seguintes passos!</p>
 
       <div class="row">
         <div class="col-6">
           <div class="card">
             <div class="card-body">
-              <p>1º passo: selecione o porta serial.</p>
+              <p>1º passo: selecione o porta serial</p>
     
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
                     <select class="form-control form-control-sm" id="selectPort">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
                     </select>
                   </div>
     
@@ -42,28 +37,20 @@
           <div class="card">
             <div class="card-body">
               <div class="form-group">
-                <label for="code">Código</label>
+                <label for="code">2º passo: digite o código gerado no site</label>
                 <input type="text" class="form-control form-control-sm" disabled id="code" placeholder="Digite o código">
-                <small id="codeHelp" class="form-text text-muted">Gere o código a partir do site</small>
               </div>
 
               <div class="form-group">
-                  <button type="submit" class="btn btn-outline-success btn-sm">Salvar código</button>
+                <button id="saveData" type="submit" disabled class="btn btn-outline-success btn-sm">Salvar código</button>
                 </div>
             </div>
           </div>
         </div>
       </div>
+      <div id="error" class="alert alert-danger" role="alert"></div>
+      <div id="success" class="alert alert-success" role="alert"></div>
     </div>
-
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    <!-- We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    Electron <script>document.write(process.versions.electron)</script>,
-    and Serialport <script>document.write(require('serialport/package').version)</script>. -->
-
-    <div id="error"></div>
-    <div id="ports"></div>
   </body>
 
   <script>

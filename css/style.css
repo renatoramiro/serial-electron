@@ -1,3 +1,14 @@
+body {
+  color: rgb(44, 70, 104);
+  background: linear-gradient(to right, rgb(246, 247, 248), rgb(78, 120, 160));
+}
+
 .card {
   height: 200px;
+}
+
+#error, #success {
+  visibility: hidden;
+  font-size: 12px;
+  margin-top: 20px;
 }
