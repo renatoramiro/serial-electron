@@ -88,9 +88,6 @@ function checkPort(port) {
   portSerial = new serialport(port, { baudRate: 9600 }, function (err) {
     document.getElementById('error').style.visibility = 'visible';
     document.getElementById('error').textContent = err.message + " (" + new Date() + ")";
-
-    document.getElementById('code').disabled = false;
-    document.getElementById('saveData').disabled = false;
     return;
   });
 }
